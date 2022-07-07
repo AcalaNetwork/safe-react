@@ -12,6 +12,9 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   UNKNOWN: '0',
   ETHEREUM: '1',
   RINKEBY: '4',
+  MACA_TESTNET: '595',
+  KAR: '686',
+  ACA: '787',
   VOLTA: '73799',
 }
 
