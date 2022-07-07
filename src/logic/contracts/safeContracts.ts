@@ -267,7 +267,7 @@ export const estimateGasForDeployingSafe = async (
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
-  }).then((value) => value * 2)
+  }).then((value) => value)
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {
