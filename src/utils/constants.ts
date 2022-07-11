@@ -57,5 +57,5 @@ const isProdGateway = () => {
 export const GATEWAY_URL =
   process.env.REACT_APP_GATEWAY_URL ||
   (IS_PRODUCTION || isProdGateway()
-    ? 'https://gateway.acala-staging.gnosis-safe.protofire.io'
-    : 'https://gateway.acala-staging.gnosis-safe.protofire.io')
+    ? 'https://gateway.staging.safe.acala.network'
+    : 'https://gateway.staging.safe.acala.network')
