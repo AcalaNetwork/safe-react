@@ -98,9 +98,9 @@ const StyledButton = styled(Button)`
   }
 `
 
-const StyledLink = styled.a`
+/* const StyledLink = styled.a`
   text-decoration: none;
-`
+` */
 
 type Props = {
   onClose: () => void
@@ -112,15 +112,15 @@ export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
       <Overlay>
         <ModalApp>
           <StyledCard>
-            <Text size="lg">The Gnosis Safe web app is not optimized for mobile.</Text>
-            <Text size="lg">Get the mobile app for a better experience.</Text>
+            <Text size="lg">The Acala Safe web app is not optimized for mobile.</Text>
+            {/* <Text size="lg">Get the mobile app for a better experience.</Text>
             <Button size="md" color="primary" variant="contained">
               <StyledLink target="_blank" href="https://gnosis-safe.io/#mobile" rel="noopener noreferrer">
                 <Text color="white" size="xl">
                   Get the App
                 </Text>
               </StyledLink>
-            </Button>
+            </Button> */}
           </StyledCard>
 
           <StyledImg src={Phone} alt="Phone" />

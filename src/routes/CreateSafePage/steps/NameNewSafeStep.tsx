@@ -88,8 +88,8 @@ function NameNewSafeStep(): ReactElement {
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
-          wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties. The
+          You are about to create a new Acala Safe wallet with one or more owners. First, let&apos;s give your new
+          wallet a name. This name is only stored locally and will never be shared with Acala or any third parties. The
           new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
@@ -109,11 +109,11 @@ function NameNewSafeStep(): ReactElement {
       <Block margin="lg">
         <Paragraph color="primary" noMargin size="lg">
           By continuing you consent to the{' '}
-          <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          {/* <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </Link>
-          {' and '}
-          <Link href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
+          {' and '} */}
+          <Link href="https://acala.network/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </Link>
           .

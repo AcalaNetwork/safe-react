@@ -10,12 +10,12 @@ import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/act
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
+//import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
-import IntercomIcon from './assets/intercom.png'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+//import IntercomIcon from './assets/intercom.png'
+//import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadGoogleTagManager, unloadGoogleTagManager } from 'src/utils/googleTagManager'
-import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
+//import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -139,7 +139,7 @@ const CookiesBannerForm = (props: {
               value={formNecessary}
             />
           </div>
-          <div className={classes.formItem}>
+          {/* <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={formSupportAndUpdates} />}
               label="Community support & updates"
@@ -147,7 +147,7 @@ const CookiesBannerForm = (props: {
               onChange={() => setFormSupportAndUpdates((prev) => !prev)}
               value={formSupportAndUpdates}
             />
-          </div>
+          </div> */}
           <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={formAnalytics} />}
@@ -173,7 +173,7 @@ const CookiesBannerForm = (props: {
   )
 }
 
-const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement => {
+/* const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement => {
   return (
     <img
       alt="Open Intercom"
@@ -191,7 +191,7 @@ const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement 
       onClick={onClick}
     />
   )
-}
+} */
 
 const CookiesBanner = isDesktop
   ? Fragment
@@ -203,7 +203,7 @@ const CookiesBanner = isDesktop
       const [localAnalytics, setLocalAnalytics] = useState(false)
 
       const { cookieBannerOpen } = useSelector(cookieBannerState)
-      const isSafeAppView = !!useSafeAppUrl().getAppUrl()
+      //const isSafeAppView = !!useSafeAppUrl().getAppUrl()
 
       const openBanner = useCallback(
         (key?: COOKIE_IDS): void => {
@@ -276,7 +276,7 @@ const CookiesBanner = isDesktop
       }, [localAnalytics])
 
       // Toggle Intercom
-      useEffect(() => {
+      /* useEffect(() => {
         if (isSafeAppView || !localSupportAndUpdates) {
           isIntercomLoaded() && closeIntercom()
           return
@@ -290,14 +290,14 @@ const CookiesBanner = isDesktop
       // Toggle Beamer
       useEffect(() => {
         localSupportAndUpdates ? loadBeamer() : unloadBeamer()
-      }, [localSupportAndUpdates])
+      }, [localSupportAndUpdates]) */
 
       return (
         <>
           {/* A fake Intercom button before Intercom is loaded */}
-          {!localSupportAndUpdates && !isSafeAppView && (
+          {/* {!localSupportAndUpdates && !isSafeAppView && (
             <FakeIntercomButton onClick={() => openBanner(COOKIE_IDS.INTERCOM)} />
-          )}
+          )} */}
 
           {/* The cookie banner itself */}
           {cookieBannerOpen && (
