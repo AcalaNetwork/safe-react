@@ -5,9 +5,13 @@ import { BigNumber } from 'bignumber.js'
 import { FeeHistoryResult } from 'web3-eth'
 import { hexToNumber } from 'web3-utils'
 
-import { getSDKWeb3ReadOnly, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
+
+//import { calcEthereumTransactionParams } from '@acala-network/eth-providers'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAcalaGasParamsDefault } from 'src/logic/wallets/acalaHelper'
 
 export const EMPTY_DATA = '0x'
 
@@ -65,6 +69,9 @@ export const getFeesPerGas = async (): Promise<{
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
+  const gasParams = await getAcalaGasParamsDefault()
+  return gasParams.gasPrice
+
   const gasPriceOracles = getGasPriceOracles()
 
   for (const gasPriceOracle of gasPriceOracles) {
@@ -87,12 +94,13 @@ export const calculateGasPrice = async (): Promise<string> => {
   return await web3ReadOnly.eth.getGasPrice()
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    return 32574000
-    const ethAdapter = getSDKWeb3ReadOnly()
+    const gasParams = await getAcalaGasParamsDefault()
 
-    return await ethAdapter.estimateGas(txConfig)
+    const gasLimit = getWeb3().utils.toNumber(gasParams.gasLimit)
+    return gasLimit
   } catch (err) {
     throw new CodedException(Errors._612, err.message)
   }
