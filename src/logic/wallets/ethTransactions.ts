@@ -11,7 +11,7 @@ import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedExce
 
 //import { calcEthereumTransactionParams } from '@acala-network/eth-providers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getAcalaGasParamsDefault } from 'src/logic/wallets/acalaHelper'
+import { getAcalaGasParamsMin } from 'src/logic/wallets/acalaHelper'
 
 export const EMPTY_DATA = '0x'
 
@@ -69,7 +69,7 @@ export const getFeesPerGas = async (): Promise<{
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  const gasParams = await getAcalaGasParamsDefault()
+  const gasParams = await getAcalaGasParamsMin()
   return gasParams.gasPrice
 
   const gasPriceOracles = getGasPriceOracles()
@@ -97,7 +97,7 @@ export const calculateGasPrice = async (): Promise<string> => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const gasParams = await getAcalaGasParamsDefault()
+    const gasParams = await getAcalaGasParamsMin()
 
     const gasLimit = getWeb3().utils.toNumber(gasParams.gasLimit)
     return gasLimit
