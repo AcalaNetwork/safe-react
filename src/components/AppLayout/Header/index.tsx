@@ -43,6 +43,7 @@ const HeaderComponent = (): React.ReactElement => {
     }
 
     tryToConnectToLastUsedProvider()
+    document.title = chainId == '686' ? 'Karura Safe' : 'Acala Safe'
   }, [chainId])
 
   const openDashboard = () => {
