@@ -12,11 +12,13 @@ import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
+import SafeLogoAca from '../assets/acala_logo.svg'
+import SafeLogoKar from '../assets/karura_logo.svg'
 import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
@@ -95,13 +97,20 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayWallet, open: openWallet, toggle: toggleWallet } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
+  const chainId = useSelector(currentChainId)
 
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <Img alt="Acala Safe" height={96} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+            <Img
+              alt={chainId == '686' ? 'Karura Safe' : 'Acala Safe'}
+              height={96}
+              src={chainId == '686' ? SafeLogoKar : SafeLogoAca}
+              testId="heading-gnosis-logo"
+              id="safe-logo"
+            />
           </Link>
         </Track>
       </Col>
