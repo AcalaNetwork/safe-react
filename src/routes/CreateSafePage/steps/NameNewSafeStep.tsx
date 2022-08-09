@@ -21,6 +21,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const nameNewSafeStepLabel = 'Name'
 
@@ -84,13 +85,14 @@ function NameNewSafeStep(): ReactElement {
     }
   }, [ownersWithENSName, createNewSafeForm])
 
+  const chainId = useSelector(currentChainId)
   return (
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to create a new Acala Safe wallet with one or more owners. First, let&apos;s give your new
-          wallet a name. This name is only stored locally and will never be shared with Acala or any third parties. The
-          new Safe will ONLY be available on <NetworkLabel />
+          You are about to create a new {chainId == '686' ? 'Karura Safe' : 'Acala Safe'} wallet with one or more
+          owners. First, let&apos;s give your new wallet a name. This name is only stored locally and will never be
+          shared with Acala or any third parties. The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
