@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
+import { estimateGasForDeployingAcalaSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
-import { calculateGasPrice, getFeesPerGas, setMaxPrioFeePerGas } from 'src/logic/wallets/ethTransactions'
+import { getFeesPerGas, setMaxPrioFeePerGas } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
 import { getNativeCurrency } from 'src/config'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+
+import { useIsEstimating } from 'src/logic/hooks/useIsEstimating'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -30,14 +32,16 @@ const estimateGas = async (
   safeCreationSalt: number,
   addresses: string[],
 ): Promise<SafeCreationEstimationResult> => {
-  const [gasEstimation, gasPrice, feesPerGas] = await Promise.all([
-    estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
-    calculateGasPrice(),
+  const [gasParams, feesPerGas] = await Promise.all([
+    estimateGasForDeployingAcalaSafe(addresses, numOwners, userAccount, safeCreationSalt),
     isMaxFeeParam() ? getFeesPerGas() : { maxPriorityFeePerGas: 0, maxFeePerGas: 0 },
   ])
 
-  const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 10))
+  const gasEstimation = gasParams[0]
+  const gasPrice = gasParams[1]
+
+  const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 16)
+  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 16))
   const nativeCurrency = getNativeCurrency()
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
@@ -66,6 +70,8 @@ export const useEstimateSafeCreationGas = ({
     gasMaxPrioFeeFormatted: '0',
   })
   const userAccount = useSelector(userAccountSelector)
+  const [isEstimating, setIsEstimating] = useIsEstimating()
+  console.log('isEstimating1=', isEstimating)
   // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies
   const addressesSerialized = JSON.stringify(addresses)
 
@@ -76,7 +82,8 @@ export const useEstimateSafeCreationGas = ({
     }
 
     estimateGas(userAccount, numOwners, safeCreationSalt, addressesList)?.then(setGasEstimation)
-  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount])
+  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount, setIsEstimating])
+  console.log('isEstimating2=', isEstimating)
 
   return gasEstimation
 }

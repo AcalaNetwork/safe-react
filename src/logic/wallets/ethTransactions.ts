@@ -106,6 +106,19 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const calculateGasPriceAndLimit = async (txConfig: EthAdapterTransaction): Promise<[number, string]> => {
+  try {
+    const gasParams = await getAcalaGasParamsMin()
+
+    const gasEstimation = getWeb3().utils.toNumber(gasParams.gasLimit)
+    const gasPrice = gasParams.gasPrice
+    return [gasEstimation, gasPrice]
+  } catch (err) {
+    throw new CodedException(Errors._612, err.message)
+  }
+}
+
 export const getUserNonce = async (userAddress: string): Promise<number> => {
   const web3 = getWeb3ReadOnly()
   try {

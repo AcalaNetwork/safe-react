@@ -27,11 +27,14 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import useEstimating from './store/IsEstimatingContext'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
+  const { isEstimatingValue } = useEstimating()
+  console.log('isEstimatingValue=', isEstimatingValue)
 
   const { setCurrentStep } = useStepper()
 

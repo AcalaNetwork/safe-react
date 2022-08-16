@@ -39,8 +39,11 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
+import useEstimating, { IsEstimatingProvider } from './steps/store/IsEstimatingContext'
 
 function CreateSafePage(): ReactElement {
+  const { isEstimatingValue } = useEstimating()
+  console.log('isEstimatingValue=', isEstimatingValue)
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
@@ -85,7 +88,6 @@ function CreateSafePage(): ReactElement {
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
   }
-
   const [initialFormValues, setInitialFormValues] = useState<CreateSafeFormValues>()
 
   useEffect(() => {
@@ -144,8 +146,14 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
-            <ReviewNewSafeStep />
+          <StepFormElement
+            label={reviewNewSafeStepLabel}
+            nextButtonLabel="Create"
+            disableNextButton={isEstimatingValue}
+          >
+            <IsEstimatingProvider>
+              <ReviewNewSafeStep />
+            </IsEstimatingProvider>
           </StepFormElement>
         </StepperForm>
       </Block>
