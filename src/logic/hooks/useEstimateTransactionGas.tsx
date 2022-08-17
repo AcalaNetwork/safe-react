@@ -40,7 +40,7 @@ export const calculateTotalGasCost = (
   gasMaxPrioFee: string,
   decimals: number,
 ): { gasCost: string; gasCostFormatted: string } => {
-  const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee, 10)
+  const totalPricePerGas = parseInt(gasPrice, 16) + parseInt(gasMaxPrioFee, 10)
   const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
   const gasCost = fromTokenUnit(estimatedGasCosts, decimals)
   const gasCostFormatted = formatAmount(gasCost)
