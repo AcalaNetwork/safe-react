@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState, createContext, useReducer  } from 'react'
+import { ReactElement, useEffect, useState, createContext, useReducer } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import styled from 'styled-components'
@@ -41,7 +41,6 @@ import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/creat
 import { trackEvent } from 'src/utils/googleTagManager'
 // import useEstimating, { IsEstimatingProvider } from './steps/store/IsEstimatingContext'
 
-
 const initialState = {
   isEstimating: false,
   dispatch: (() => undefined) as any,
@@ -58,10 +57,10 @@ const reducer = (state: any, action: any) => {
     default:
       return state
   }
-
+}
 
 function CreateSafePage(): ReactElement {
-  const [state, dispatch] = useReducer(reducer , initialState ) 
+  const [state, dispatch] = useReducer(reducer, initialState)
   console.log('isEstimating value inside CreateSafePage: ', state)
   // const { isEstimatingValue } = useEstimating()
   // console.log('isEstimatingValue=', isEstimatingValue)
@@ -172,8 +171,12 @@ function CreateSafePage(): ReactElement {
             nextButtonLabel="Create"
             disableNextButton={initialState.isEstimating}
           >
-            <IsEstimatingContext.Provider value={{
-               isEstimating: state.isEstimating, dispatch}} >
+            <IsEstimatingContext.Provider
+              value={{
+                isEstimating: state.isEstimating,
+                dispatch,
+              }}
+            >
               <ReviewNewSafeStep />
             </IsEstimatingContext.Provider>
           </StepFormElement>
