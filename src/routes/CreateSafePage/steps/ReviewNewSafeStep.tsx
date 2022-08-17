@@ -40,12 +40,11 @@ function ReviewNewSafeStep(): ReactElement | null {
 
   //Test Dispatch method
 
-  useEffect(() => {
-    isEstimatingContext.dispatch({ type: 'TOGGLE_IS_ESTIMATING' })
-  }, [])
+  // useEffect(() => {
+  //   isEstimatingContext.dispatch({ type: 'TOGGLE_IS_ESTIMATING' })
+  // }, [])
 
   console.log('isEstimating value inside ReviewNewSafeStep: ', isEstimatingContext.isEstimating)
-
 
   const { setCurrentStep } = useStepper()
 
