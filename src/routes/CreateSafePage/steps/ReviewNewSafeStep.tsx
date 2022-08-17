@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useContext } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -27,14 +27,25 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import useEstimating from './store/IsEstimatingContext'
+// import useEstimating from './store/IsEstimatingContext'
+import { IsEstimatingContext } from '../CreateSafePage'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
-  const { isEstimatingValue } = useEstimating()
-  console.log('isEstimatingValue=', isEstimatingValue)
+  // const { isEstimatingValue } = useEstimating()
+  // console.log('isEstimatingValue=', isEstimatingValue)
+  const isEstimatingContext = useContext(IsEstimatingContext)
+
+  //Test Dispatch method
+
+  useEffect(() => {
+    isEstimatingContext.dispatch({ type: 'TOGGLE_IS_ESTIMATING' })
+  }, [])
+
+  console.log('isEstimating value inside ReviewNewSafeStep: ', isEstimatingContext.isEstimating)
+
 
   const { setCurrentStep } = useStepper()
 
