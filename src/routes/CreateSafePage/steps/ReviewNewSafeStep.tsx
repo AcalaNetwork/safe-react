@@ -27,24 +27,13 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-// import useEstimating from './store/IsEstimatingContext'
-import { IsEstimatingContext } from '../CreateSafePage'
+import { IsEstimatingContext } from './store/IsEstimatingContext'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
-  // const { isEstimatingValue } = useEstimating()
-  // console.log('isEstimatingValue=', isEstimatingValue)
   const isEstimatingContext = useContext(IsEstimatingContext)
-
-  //Test Dispatch method
-
-  // useEffect(() => {
-  //   isEstimatingContext.dispatch({ type: 'TOGGLE_IS_ESTIMATING' })
-  // }, [])
-
-  console.log('isEstimating value inside ReviewNewSafeStep: ', isEstimatingContext.isEstimating)
 
   const { setCurrentStep } = useStepper()
 
@@ -66,18 +55,62 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
-    addresses: ownerAddresses,
-    numOwners: numberOfOwners,
-    safeCreationSalt,
-  })
+  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = isEstimatingContext.isEstimating
+    ? useEstimateSafeCreationGas({
+        addresses: ownerAddresses,
+        numOwners: numberOfOwners,
+        safeCreationSalt,
+      })
+    : isEstimatingContext
+
   const nativeCurrency = getNativeCurrency()
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
-  }, [gasLimit, gasPrice, createSafeForm, gasMaxPrioFee])
+
+    console.log('gasCostFormatted0 = ', isEstimatingContext.gasCostFormatted)
+    isEstimatingContext.dispatch({
+      type: 'SET_FALSE',
+      gasCostFormatted: gasCostFormatted,
+    })
+    console.log('Form updated')
+    console.log('gasCostFormatted1 = ', isEstimatingContext.gasCostFormatted)
+    /* if (gasCostFormatted != '> 0.001' && isEstimatingContext.isEstimating) {
+      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
+    } */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gasLimit, gasPrice, gasMaxPrioFee])
+
+  /*   useEffect(() => {
+    if (
+      createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT] > 0 &&
+      createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE] > 0 &&
+      isEstimatingContext.isEstimating
+    ) {
+      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
+      console.log('isEstimating triggered')
+      console.log('gasCostFormatted2 = ', gasCostFormatted)
+      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT])
+      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE])
+      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT], createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE]]) */
+
+  /*   useEffect(() => {
+    console.log('gasCostFormatted3 = ', gasCostFormatted)
+    if (gasCostFormatted != '> 0.001' && isEstimatingContext.isEstimating) {
+      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
+      //isEstimatingContext.isEstimating = false
+      console.log('isEstimating triggered to FALSE')
+    } /* else if (gasCostFormatted == '> 0.001' && !isEstimatingContext.isEstimating) {
+      isEstimatingContext.dispatch({ type: 'SET_TRUE' })
+      console.log('isEstimating triggered to TRUE')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gasCostFormatted]) */
 
   return (
     <Row data-testid={'create-safe-review-step'}>

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState, createContext, useReducer } from 'react'
+import { ReactElement, useEffect, useState, useReducer } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import styled from 'styled-components'
@@ -39,31 +39,11 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
-// import useEstimating, { IsEstimatingProvider } from './steps/store/IsEstimatingContext'
-
-const initialState = {
-  isEstimating: false,
-  dispatch: (() => undefined) as any,
-}
-
-export const IsEstimatingContext = createContext(initialState)
-
-const reducer = (state: any, action: any) => {
-  switch (action.type) {
-    case 'TOGGLE_IS_ESTIMATING':
-      return {
-        isEstimating: !state.isEstimating,
-      }
-    default:
-      return state
-  }
-}
+import { initialState, IsEstimatingContext } from './steps/store/IsEstimatingContext'
+import { reducer } from './steps/store/estimatingReducer'
 
 function CreateSafePage(): ReactElement {
   const [state, dispatch] = useReducer(reducer, initialState)
-  console.log('isEstimating value inside CreateSafePage: ', state)
-  // const { isEstimatingValue } = useEstimating()
-  // console.log('isEstimatingValue=', isEstimatingValue)
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
@@ -168,12 +148,16 @@ function CreateSafePage(): ReactElement {
           </StepFormElement>
           <StepFormElement
             label={reviewNewSafeStepLabel}
-            nextButtonLabel="Create"
-            disableNextButton={initialState.isEstimating}
+            nextButtonLabel={state.isEstimating ? 'Estimating' : 'Create'}
+            disableNextButton={state.isEstimating}
           >
             <IsEstimatingContext.Provider
               value={{
                 isEstimating: state.isEstimating,
+                gasCostFormatted: state.gasCostFormatted,
+                gasLimit: state.gasLimit,
+                gasPrice: state.gasPrice,
+                gasMaxPrioFee: state.gasMaxPrioFee,
                 dispatch,
               }}
             >

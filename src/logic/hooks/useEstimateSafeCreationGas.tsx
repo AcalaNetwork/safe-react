@@ -9,8 +9,6 @@ import { userAccountSelector } from '../wallets/store/selectors'
 import { getNativeCurrency } from 'src/config'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
-import { useIsEstimating } from 'src/logic/hooks/useIsEstimating'
-
 type EstimateSafeCreationGasProps = {
   addresses: string[]
   numOwners: number
@@ -70,8 +68,6 @@ export const useEstimateSafeCreationGas = ({
     gasMaxPrioFeeFormatted: '0',
   })
   const userAccount = useSelector(userAccountSelector)
-  const [isEstimating, setIsEstimating] = useIsEstimating()
-  console.log('isEstimating1=', isEstimating)
   // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies
   const addressesSerialized = JSON.stringify(addresses)
 
@@ -82,8 +78,7 @@ export const useEstimateSafeCreationGas = ({
     }
 
     estimateGas(userAccount, numOwners, safeCreationSalt, addressesList)?.then(setGasEstimation)
-  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount, setIsEstimating])
-  console.log('isEstimating2=', isEstimating)
+  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount])
 
   return gasEstimation
 }

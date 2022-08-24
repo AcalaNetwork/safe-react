@@ -1,23 +1,12 @@
-import { createContext, useReducer, useContext } from 'react'
-import estimatingReducer, { initialState } from './estimatingReducer'
+import { createContext } from 'react'
 
-const IsEstimatingContext = createContext(initialState)
-
-export const IsEstimatingProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(estimatingReducer, initialState)
-  const toggleEstimatingValue = () => {
-    dispatch({ type: 'SET_FALSE' })
-  }
-  const isEstimating = { isEstimatingValue: state.value, toggleEstimatingValue }
-  return <IsEstimatingContext.Provider value={isEstimating}>{children}</IsEstimatingContext.Provider>
+export const initialState = {
+  isEstimating: true,
+  gasCostFormatted: '> 0.001',
+  gasLimit: 0,
+  gasPrice: '0',
+  gasMaxPrioFee: 0,
+  dispatch: (() => undefined) as any,
 }
 
-const useEstimating = () => {
-  const context = useContext(IsEstimatingContext)
-  if (context === undefined) {
-    throw new Error('Context is not defined')
-  }
-  return context
-}
-
-export default useEstimating
+export const IsEstimatingContext = createContext(initialState)

@@ -1,12 +1,18 @@
-export const initialState = { isEstimatingValue: true }
-const estimatingReducer = (state, action) => {
-  const { type } = action
-  switch (type) {
+export const reducer = (state: any, action: any) => {
+  switch (action.type) {
     case 'SET_FALSE':
-      //console.log('SET_FALSE', payload)
-      return { ...state, isEstimatingValue: false }
+      return {
+        isEstimating: false,
+        gasCostFormatted: state.gasCostFormatted,
+        gasLimit: state.gasLimit,
+        gasPrice: state.gasPrice,
+        gasMaxPrioFee: state.gasMaxPrioFee,
+      }
+    case 'SET_TRUE':
+      return {
+        isEstimating: true,
+      }
     default:
-      return { ...state }
+      return state
   }
 }
-export default estimatingReducer
