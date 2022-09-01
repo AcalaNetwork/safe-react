@@ -107,13 +107,39 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const calculateGasPriceAndLimit = async (txConfig: EthAdapterTransaction): Promise<[number, string]> => {
+export const calculateGasPriceAndLimit = async (txConfig: EthAdapterTransaction): Promise<any> => {
   try {
-    const gasParams = await getAcalaGasParamsMin()
+    // const ethAdapter = getSDKWeb3ReadOnly()
+    // const txGasLimit = await ethAdapter.estimateGas(txConfig)
+
+    // getAcalaGasParamsMin
+    const web3Extended = await getWeb3ReadOnly().eth.extend({
+      methods: [
+        {
+          name: 'getEthGas',
+          call: 'eth_getEthGas',
+          params: 1,
+        },
+      ],
+    })
+
+    const params = {
+      gasLimit: 560000,
+      storageLimit: 12288,
+      //validUntil: blockNumber + 100,
+    }
+
+    const gasParams = await web3Extended.getEthGas(params)
+
+    //return gasParams
+    //calculateGasPriceAndLimit
 
     const gasEstimation = getWeb3().utils.toNumber(gasParams.gasLimit)
     const gasPrice = gasParams.gasPrice
+
     return [gasEstimation, gasPrice]
+    //RETURNING A PROMISE
+    // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
     throw new CodedException(Errors._612, err.message)
   }

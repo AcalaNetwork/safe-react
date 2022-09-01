@@ -275,14 +275,17 @@ export const estimateGasForDeployingAcalaSafe = async (
   numConfirmations: number,
   userAccount: string,
   safeCreationSalt: number,
-): Promise<[number, string]> => {
+): Promise<any> => {
   const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
 
   return calculateGasPriceAndLimit({
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
-  }).then((value) => value)
+  }).then((value) => {
+    console.log(value)
+    return value
+  })
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {

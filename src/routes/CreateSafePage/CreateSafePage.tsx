@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState, useReducer } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import styled from 'styled-components'
@@ -39,11 +39,11 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
-import { initialState, IsEstimatingContext } from './steps/store/IsEstimatingContext'
-import { reducer } from './steps/store/estimatingReducer'
+// import { initialState, IsEstimatingContext } from './steps/store/IsEstimatingContext'
+// import { reducer } from './steps/store/estimatingReducer'
 
 function CreateSafePage(): ReactElement {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  // const [state, dispatch] = useReducer(reducer, initialState)
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
@@ -146,12 +146,8 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement
-            label={reviewNewSafeStepLabel}
-            nextButtonLabel={state.isEstimating ? 'Estimating' : 'Create'}
-            disableNextButton={state.isEstimating}
-          >
-            <IsEstimatingContext.Provider
+          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
+            {/* <IsEstimatingContext.Provider
               value={{
                 isEstimating: state.isEstimating,
                 gasCostFormatted: state.gasCostFormatted,
@@ -160,9 +156,9 @@ function CreateSafePage(): ReactElement {
                 gasMaxPrioFee: state.gasMaxPrioFee,
                 dispatch,
               }}
-            >
-              <ReviewNewSafeStep />
-            </IsEstimatingContext.Provider>
+            > */}
+            <ReviewNewSafeStep />
+            {/* </IsEstimatingContext.Provider> */}
           </StepFormElement>
         </StepperForm>
       </Block>

@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useContext } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -27,13 +27,13 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { IsEstimatingContext } from './store/IsEstimatingContext'
+// import { IsEstimatingContext } from './store/IsEstimatingContext'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
-  const isEstimatingContext = useContext(IsEstimatingContext)
+  // const isEstimatingContext = useContext(IsEstimatingContext)
 
   const { setCurrentStep } = useStepper()
 
@@ -55,28 +55,33 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = isEstimatingContext.isEstimating
-    ? useEstimateSafeCreationGas({
-        addresses: ownerAddresses,
-        numOwners: numberOfOwners,
-        safeCreationSalt,
-      })
-    : isEstimatingContext
+  // const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = isEstimatingContext.isEstimating
+  //   ? useEstimateSafeCreationGas({
+  //       addresses: ownerAddresses,
+  //       numOwners: numberOfOwners,
+  //       safeCreationSalt,
+  //     })
+  //   : isEstimatingContext
 
+  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
+    addresses: ownerAddresses,
+    numOwners: numberOfOwners,
+    safeCreationSalt,
+  })
   const nativeCurrency = getNativeCurrency()
-
+  // debugger
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
 
-    console.log('gasCostFormatted0 = ', isEstimatingContext.gasCostFormatted)
-    isEstimatingContext.dispatch({
-      type: 'SET_FALSE',
-      gasCostFormatted: gasCostFormatted,
-    })
-    console.log('Form updated')
-    console.log('gasCostFormatted1 = ', isEstimatingContext.gasCostFormatted)
+    // console.log('gasCostFormatted0 = ', isEstimatingContext.gasCostFormatted)
+    // isEstimatingContext.dispatch({
+    //   type: 'SET_FALSE',
+    //   gasCostFormatted: gasCostFormatted,
+    // })
+    // console.log('Form updated')
+    // console.log('gasCostFormatted1 = ', isEstimatingContext.gasCostFormatted)
     /* if (gasCostFormatted != '> 0.001' && isEstimatingContext.isEstimating) {
       isEstimatingContext.dispatch({ type: 'SET_FALSE' })
     } */
