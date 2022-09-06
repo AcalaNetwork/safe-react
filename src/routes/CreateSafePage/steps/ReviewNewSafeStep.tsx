@@ -21,19 +21,19 @@ import {
   FIELD_SAFE_OWNERS_LIST,
   FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE,
 } from '../fields/createSafeFields'
+import { store } from 'src/store'
+import updateSafeGasLimit from 'src/logic/wallets/store/actions/updateSafeGasLimit'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-// import { IsEstimatingContext } from './store/IsEstimatingContext'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
-  // const isEstimatingContext = useContext(IsEstimatingContext)
 
   const { setCurrentStep } = useStepper()
 
@@ -55,14 +55,6 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  // const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = isEstimatingContext.isEstimating
-  //   ? useEstimateSafeCreationGas({
-  //       addresses: ownerAddresses,
-  //       numOwners: numberOfOwners,
-  //       safeCreationSalt,
-  //     })
-  //   : isEstimatingContext
-
   const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,
     numOwners: numberOfOwners,
@@ -74,48 +66,10 @@ function ReviewNewSafeStep(): ReactElement | null {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
-
-    // console.log('gasCostFormatted0 = ', isEstimatingContext.gasCostFormatted)
-    // isEstimatingContext.dispatch({
-    //   type: 'SET_FALSE',
-    //   gasCostFormatted: gasCostFormatted,
-    // })
-    // console.log('Form updated')
-    // console.log('gasCostFormatted1 = ', isEstimatingContext.gasCostFormatted)
-    /* if (gasCostFormatted != '> 0.001' && isEstimatingContext.isEstimating) {
-      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
-    } */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gasLimit, gasPrice, gasMaxPrioFee])
 
-  /*   useEffect(() => {
-    if (
-      createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT] > 0 &&
-      createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE] > 0 &&
-      isEstimatingContext.isEstimating
-    ) {
-      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
-      console.log('isEstimating triggered')
-      console.log('gasCostFormatted2 = ', gasCostFormatted)
-      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT])
-      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE])
-      console.log(createSafeFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createSafeFormValues[FIELD_NEW_SAFE_GAS_LIMIT], createSafeFormValues[FIELD_NEW_SAFE_GAS_PRICE]]) */
-
-  /*   useEffect(() => {
-    console.log('gasCostFormatted3 = ', gasCostFormatted)
-    if (gasCostFormatted != '> 0.001' && isEstimatingContext.isEstimating) {
-      isEstimatingContext.dispatch({ type: 'SET_FALSE' })
-      //isEstimatingContext.isEstimating = false
-      console.log('isEstimating triggered to FALSE')
-    } /* else if (gasCostFormatted == '> 0.001' && !isEstimatingContext.isEstimating) {
-      isEstimatingContext.dispatch({ type: 'SET_TRUE' })
-      console.log('isEstimating triggered to TRUE')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gasCostFormatted]) */
+  // store.dispatch(updateSafeGasLimit(gasLimit))
+  console.log('STORE STATE:', store.getState())
 
   return (
     <Row data-testid={'create-safe-review-step'}>

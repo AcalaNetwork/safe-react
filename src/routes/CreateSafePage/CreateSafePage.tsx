@@ -46,7 +46,6 @@ import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
 function CreateSafePage(): ReactElement {
-  console.log('store:', store)
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
@@ -152,19 +151,8 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create" disableNextButton>
-            {/* <IsEstimatingContext.Provider
-              value={{
-                isEstimating: state.isEstimating,
-                gasCostFormatted: state.gasCostFormatted,
-                gasLimit: state.gasLimit,
-                gasPrice: state.gasPrice,
-                gasMaxPrioFee: state.gasMaxPrioFee,
-                dispatch,
-              }}
-            > */}
+          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create" disableNextButton={!gasLimit}>
             <ReviewNewSafeStep />
-            {/* </IsEstimatingContext.Provider> */}
           </StepFormElement>
         </StepperForm>
       </Block>
