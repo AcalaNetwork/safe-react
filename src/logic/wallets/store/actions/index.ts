@@ -4,4 +4,5 @@ export enum PROVIDER_ACTIONS {
   SMART_CONTRACT = 'provider/smartContract',
   NETWORK = 'provider/networkUpdated',
   ENS = 'provider/ensUpdated',
+  GAS_LIMIT = 'provider/gas_limitUpdated',
 }

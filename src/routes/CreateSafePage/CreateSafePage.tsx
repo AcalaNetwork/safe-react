@@ -27,7 +27,13 @@ import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
-import { providerNameSelector, shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import {
+  providerNameSelector,
+  shouldSwitchWalletChain,
+  userAccountSelector,
+  gasLimitSelector,
+} from 'src/logic/wallets/store/selectors'
+import { store } from 'src/store'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
@@ -39,14 +45,14 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
-// import { initialState, IsEstimatingContext } from './steps/store/IsEstimatingContext'
-// import { reducer } from './steps/store/estimatingReducer'
-
 function CreateSafePage(): ReactElement {
-  // const [state, dispatch] = useReducer(reducer, initialState)
+  console.log('store:', store)
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
+  const gasLimit = useSelector(gasLimitSelector)
+  console.log('GAS_LIMIT', gasLimit)
+
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork
 
@@ -146,7 +152,7 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
+          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create" disableNextButton>
             {/* <IsEstimatingContext.Provider
               value={{
                 isEstimating: state.isEstimating,
