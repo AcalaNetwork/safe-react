@@ -33,7 +33,6 @@ import {
   userAccountSelector,
   gasLimitSelector,
 } from 'src/logic/wallets/store/selectors'
-import { store } from 'src/store'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
@@ -50,7 +49,6 @@ function CreateSafePage(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
   const gasLimit = useSelector(gasLimitSelector)
-  console.log('GAS_LIMIT', gasLimit)
 
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork

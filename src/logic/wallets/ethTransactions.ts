@@ -109,10 +109,6 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateGasPriceAndLimit = async (txConfig: EthAdapterTransaction): Promise<any> => {
   try {
-    // const ethAdapter = getSDKWeb3ReadOnly()
-    // const txGasLimit = await ethAdapter.estimateGas(txConfig)
-
-    // getAcalaGasParamsMin
     const web3Extended = await getWeb3ReadOnly().eth.extend({
       methods: [
         {

@@ -55,21 +55,23 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
+  const { gasCostFormatted, gasPrice, gasLimit, gasMaxPrioFee } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,
     numOwners: numberOfOwners,
     safeCreationSalt,
   })
   const nativeCurrency = getNativeCurrency()
-  // debugger
+
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
-  }, [gasLimit, gasPrice, gasMaxPrioFee])
+  }, [gasLimit, gasPrice, createSafeForm, gasMaxPrioFee])
 
-  // store.dispatch(updateSafeGasLimit(gasLimit))
-  console.log('STORE STATE:', store.getState())
+  useEffect(() => {
+    // debugger
+    if (gasLimit) store.dispatch(updateSafeGasLimit(gasLimit))
+  }, [gasLimit])
 
   return (
     <Row data-testid={'create-safe-review-step'}>

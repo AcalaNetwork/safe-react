@@ -277,13 +277,14 @@ export const estimateGasForDeployingAcalaSafe = async (
   safeCreationSalt: number,
 ): Promise<any> => {
   const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
-
+  console.log('estimateGasForDeployingAcalaSafe')
   return calculateGasPriceAndLimit({
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
   }).then((value) => {
     console.log(value)
+    //store.dispatch(updateSafeGasLimit(value[0]))
     return value
   })
 }
