@@ -70,7 +70,11 @@ function ReviewNewSafeStep(): ReactElement | null {
 
   useEffect(() => {
     // debugger
-    if (gasLimit) store.dispatch(updateSafeGasLimit(gasLimit))
+    if (gasLimit) {
+      setTimeout(() => {
+        store.dispatch(updateSafeGasLimit(gasLimit))
+      }, 300)
+    }
   }, [gasLimit])
 
   return (
