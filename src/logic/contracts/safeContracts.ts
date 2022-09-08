@@ -15,7 +15,7 @@ import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { getChainById, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { calculateGasOf, calculateGasPriceAndLimit, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ProxyFactory } from 'src/types/contracts/proxy_factory.d'
@@ -268,6 +268,25 @@ export const estimateGasForDeployingSafe = async (
     from: userAccount,
     to: proxyFactoryMaster.options.address,
   }).then((value) => value)
+}
+
+export const estimateGasForDeployingAcalaSafe = async (
+  safeAccounts: string[],
+  numConfirmations: number,
+  userAccount: string,
+  safeCreationSalt: number,
+): Promise<any> => {
+  const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
+  console.log('estimateGasForDeployingAcalaSafe')
+  return calculateGasPriceAndLimit({
+    data: proxyFactoryData,
+    from: userAccount,
+    to: proxyFactoryMaster.options.address,
+  }).then((value) => {
+    console.log(value)
+    //store.dispatch(updateSafeGasLimit(value[0]))
+    return value
+  })
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {

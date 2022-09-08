@@ -4,24 +4,27 @@ import { ChainId } from 'src/config/chain.d'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 
 export type ProvidersState = {
-  name: string
-  network: ChainId
-  account: string
-  available: boolean
-  ensDomain: string
-  loaded: boolean
+  name: string // payload //selectors
+  network: ChainId // payload // selectors
+  account: string // payload // selectors
+  available: boolean // selectors
+  ensDomain: string // payload // selectors
+  loaded: boolean // selectors
+  new_safe_gas_limit: number // payload
 }
 
 export type ProviderNamePayload = ProvidersState['name']
 export type ProviderNetworkPayload = ProvidersState['network']
 export type ProviderAccountPayload = ProvidersState['account']
 export type ProviderEnsPayload = ProvidersState['ensDomain']
+export type ProviderNewSafeGasLimitPayload = ProvidersState['new_safe_gas_limit']
 
 export type ProviderPayloads =
   | ProviderNamePayload
   | ProviderAccountPayload
   | ProviderNetworkPayload
   | ProviderEnsPayload
+  | ProviderNewSafeGasLimitPayload
 
 const initialProviderState: ProvidersState = {
   name: '',
@@ -30,6 +33,7 @@ const initialProviderState: ProvidersState = {
   ensDomain: '',
   available: false,
   loaded: false,
+  new_safe_gas_limit: 0,
 }
 
 export const PROVIDER_REDUCER_ID = 'providers'
@@ -64,6 +68,11 @@ const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
       providerFactory({
         ...state,
         ensDomain: payload,
+      }),
+    [PROVIDER_ACTIONS.GAS_LIMIT]: (state: ProvidersState, { payload }: Action<ProviderNewSafeGasLimitPayload>) =>
+      providerFactory({
+        ...state,
+        new_safe_gas_limit: payload,
       }),
   },
   initialProviderState,

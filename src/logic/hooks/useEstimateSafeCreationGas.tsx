@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
+
+import { estimateGasForDeployingAcalaSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
-import { calculateGasPrice, getFeesPerGas, setMaxPrioFeePerGas } from 'src/logic/wallets/ethTransactions'
+import { getFeesPerGas, setMaxPrioFeePerGas } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
 import { getNativeCurrency } from 'src/config'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
@@ -30,16 +31,20 @@ const estimateGas = async (
   safeCreationSalt: number,
   addresses: string[],
 ): Promise<SafeCreationEstimationResult> => {
-  const [gasEstimation, gasPrice, feesPerGas] = await Promise.all([
-    estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
-    calculateGasPrice(),
+  const [gasParams, feesPerGas] = await Promise.all([
+    estimateGasForDeployingAcalaSafe(addresses, numOwners, userAccount, safeCreationSalt),
     isMaxFeeParam() ? getFeesPerGas() : { maxPriorityFeePerGas: 0, maxFeePerGas: 0 },
   ])
 
-  const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 10))
+  const gasEstimation = gasParams[0] //useSelector(gasLimitSelector)//
+  const gasPrice = gasParams[1]
+  // store.dispatch(updateSafeGasLimit(gasParams[0]))
+
+  const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 16)
+  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 16))
   const nativeCurrency = getNativeCurrency()
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
+
   const gasCostFormatted = formatAmount(gasCost)
 
   return {
@@ -57,6 +62,7 @@ export const useEstimateSafeCreationGas = ({
   numOwners,
   safeCreationSalt,
 }: EstimateSafeCreationGasProps): SafeCreationEstimationResult => {
+  // setState -> gasLimit = 0
   const [gasEstimation, setGasEstimation] = useState<SafeCreationEstimationResult>({
     gasEstimation: 0,
     gasCostFormatted: '> 0.001',
@@ -77,6 +83,6 @@ export const useEstimateSafeCreationGas = ({
 
     estimateGas(userAccount, numOwners, safeCreationSalt, addressesList)?.then(setGasEstimation)
   }, [numOwners, safeCreationSalt, addressesSerialized, userAccount])
-
+  console.log('gasEstimation', gasEstimation)
   return gasEstimation
 }

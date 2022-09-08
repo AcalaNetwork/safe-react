@@ -1,7 +1,6 @@
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk-types'
 import { getWeb3ReadOnly, getSDKWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const getAcalaGasParamsDefault = async (): Promise<any> => {
   try {
@@ -22,8 +21,8 @@ export const getAcalaGasParamsDefault = async (): Promise<any> => {
 
 export const getAcalaGasParamsMin = async (): Promise<any> => {
   try {
-    const web3 = getWeb3()
-    const blockNumber = await web3.eth.getBlockNumber()
+    //const web3 = getWeb3()
+    //const blockNumber = await web3.eth.getBlockNumber()
 
     const web3Extended = await getWeb3ReadOnly().eth.extend({
       methods: [
@@ -38,7 +37,7 @@ export const getAcalaGasParamsMin = async (): Promise<any> => {
     const params = {
       gasLimit: 560000,
       storageLimit: 12288,
-      validUntil: blockNumber + 100,
+      //validUntil: blockNumber + 100,
     }
 
     const gasParams = await web3Extended.getEthGas(params)
@@ -51,9 +50,9 @@ export const getAcalaGasParamsMin = async (): Promise<any> => {
 export const getAcalaGasParams = async (txConfig: EthAdapterTransaction): Promise<any> => {
   try {
     const ethAdapter = getSDKWeb3ReadOnly()
-    const web3 = getWeb3()
+    //const web3 = getWeb3()
     const txGasLimit = await ethAdapter.estimateGas(txConfig)
-    const blockNumber = await web3.eth.getBlockNumber()
+    //const blockNumber = await web3.eth.getBlockNumber()
 
     const web3Extended = await getWeb3ReadOnly().eth.extend({
       methods: [
@@ -68,7 +67,7 @@ export const getAcalaGasParams = async (txConfig: EthAdapterTransaction): Promis
     const params = {
       gasLimit: txGasLimit,
       storageLimit: 64100,
-      validUntil: blockNumber + 100,
+      //validUntil: blockNumber + 100,
     }
 
     const gasParams = await web3Extended.getEthGas(params)
