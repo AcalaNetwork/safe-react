@@ -18,11 +18,13 @@ import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
+//import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
+import SafeTokenWidget, { getSafeTokenAddress } from './SafeTokenWidget'
+import { _getChainId } from 'src/config'
 
 const styles = () => ({
   root: {
@@ -110,7 +112,8 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayWallet, open: openWallet, toggle: toggleWallet } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
-  const chainId = useSelector(currentChainId)
+  const chainId = _getChainId()
+  const chainHasSafeToken = Boolean(getSafeTokenAddress(chainId))
 
   return (
     <Row className={classes.summary}>
@@ -135,6 +138,13 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           <WalletSwitch />
           <Divider />
         </div>
+      )}
+
+      {chainHasSafeToken && (
+        <>
+          <Divider />
+          <SafeTokenWidget />
+        </>
       )}
 
       <Divider />
