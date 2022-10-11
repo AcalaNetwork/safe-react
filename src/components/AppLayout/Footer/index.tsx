@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 } as any)
 
 const Footer = (): React.ReactElement => {
-  //const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION} ` : 'Versions'
+  const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION} ` : 'Versions'
   const date = new Date()
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -94,14 +94,14 @@ const Footer = (): React.ReactElement => {
       <GnoButtonLink className={cn(classes.item, classes.link, classes.buttonLink)} onClick={openCookiesHandler}>
         Preferences
       </GnoButtonLink>
-      {/* <span className={classes.sep}>|</span>
+      <span className={classes.sep}>|</span>
       <Link
         className={cn(classes.item, classes.link)}
         target="_blank"
         to="https://github.com/gnosis/safe-react/releases"
       >
         {appVersion}
-      </Link> */}
+      </Link>
       {/*       <span className={classes.sep}>|</span>
       <AppstoreButton light placement="footer" /> */}
     </footer>
