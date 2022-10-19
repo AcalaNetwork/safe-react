@@ -15,6 +15,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   MACA_TESTNET: '595',
   KAR: '686',
   ACA: '787',
+  GOERLI: '5',
   VOLTA: '73799',
 }
 
