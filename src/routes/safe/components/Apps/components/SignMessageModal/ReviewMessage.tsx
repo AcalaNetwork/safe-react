@@ -20,6 +20,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const Container = styled.div`
   max-width: 480px;
@@ -113,6 +114,7 @@ export const ReviewMessage = ({
     )
   }
 
+  const chainId = useSelector(currentChainId)
   return (
     <TxModalWrapper
       txData={txData}
@@ -170,7 +172,8 @@ export const ReviewMessage = ({
         />
         <InfoMessage>
           <Icon size="md" type="info" color="warning" />
-          Signing a message with the Safe requires a transaction on the blockchain
+          Signing a message with the {chainId == '686' ? 'Karura Safe' : 'Acala Safe'} requires a transaction on the
+          blockchain
         </InfoMessage>
       </Container>
     </TxModalWrapper>

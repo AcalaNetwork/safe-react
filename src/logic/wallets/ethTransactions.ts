@@ -5,9 +5,13 @@ import { BigNumber } from 'bignumber.js'
 import { FeeHistoryResult } from 'web3-eth'
 import { hexToNumber } from 'web3-utils'
 
-import { getSDKWeb3ReadOnly, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
+
+//import { calcEthereumTransactionParams } from '@acala-network/eth-providers'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAcalaGasParamsMin } from 'src/logic/wallets/acalaHelper'
 
 export const EMPTY_DATA = '0x'
 
@@ -65,6 +69,9 @@ export const getFeesPerGas = async (): Promise<{
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
+  const gasParams = await getAcalaGasParamsMin()
+  return gasParams.gasPrice
+
   const gasPriceOracles = getGasPriceOracles()
 
   for (const gasPriceOracle of gasPriceOracles) {
@@ -87,11 +94,48 @@ export const calculateGasPrice = async (): Promise<string> => {
   return await web3ReadOnly.eth.getGasPrice()
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const ethAdapter = getSDKWeb3ReadOnly()
+    const gasParams = await getAcalaGasParamsMin()
 
-    return await ethAdapter.estimateGas(txConfig)
+    const gasLimit = getWeb3().utils.toNumber(gasParams.gasLimit)
+    return gasLimit
+  } catch (err) {
+    throw new CodedException(Errors._612, err.message)
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const calculateGasPriceAndLimit = async (txConfig: EthAdapterTransaction): Promise<any> => {
+  try {
+    const web3Extended = await getWeb3ReadOnly().eth.extend({
+      methods: [
+        {
+          name: 'getEthGas',
+          call: 'eth_getEthGas',
+          params: 1,
+        },
+      ],
+    })
+
+    const params = {
+      gasLimit: 560000,
+      storageLimit: 12288,
+      //validUntil: blockNumber + 100,
+    }
+
+    const gasParams = await web3Extended.getEthGas(params)
+
+    //return gasParams
+    //calculateGasPriceAndLimit
+
+    const gasEstimation = getWeb3().utils.toNumber(gasParams.gasLimit)
+    const gasPrice = gasParams.gasPrice
+
+    return [gasEstimation, gasPrice]
+    //RETURNING A PROMISE
+    // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
     throw new CodedException(Errors._612, err.message)
   }

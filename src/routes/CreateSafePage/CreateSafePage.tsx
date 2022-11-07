@@ -27,7 +27,12 @@ import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
-import { providerNameSelector, shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import {
+  providerNameSelector,
+  shouldSwitchWalletChain,
+  userAccountSelector,
+  gasLimitSelector,
+} from 'src/logic/wallets/store/selectors'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
@@ -39,11 +44,12 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import { trackEvent } from 'src/utils/googleTagManager'
-
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
+  const gasLimit = useSelector(gasLimitSelector)
+
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork
 
@@ -85,7 +91,6 @@ function CreateSafePage(): ReactElement {
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
   }
-
   const [initialFormValues, setInitialFormValues] = useState<CreateSafeFormValues>()
 
   useEffect(() => {
@@ -144,7 +149,7 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
+          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create" disableNextButton={!gasLimit}>
             <ReviewNewSafeStep />
           </StepFormElement>
         </StepperForm>

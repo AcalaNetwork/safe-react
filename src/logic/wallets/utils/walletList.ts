@@ -52,13 +52,13 @@ const wallets = (chainId: ChainId): Wallet[] => {
       walletName: WALLETS.KEYSTONE,
       desktop: false,
       rpcUrl,
-      appName: 'Safe',
+      appName: 'Acala Safe',
     },
     { walletName: WALLETS.TRUST, preferred: true, desktop: false },
     {
       walletName: WALLETS.LATTICE,
       rpcUrl,
-      appName: 'Safe',
+      appName: 'Acala Safe',
       desktop: false,
     },
     {

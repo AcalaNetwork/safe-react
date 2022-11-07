@@ -12,6 +12,8 @@ import { validateCsvData, validateFile } from 'src/routes/safe/components/Addres
 import { ChainId } from 'src/config/chain.d'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -99,6 +101,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
     onClose()
   }
 
+  const chainId = useSelector(currentChainId)
   return (
     <Modal description="Import address book" handleClose={handleClose} open={isOpen} title="Import address book">
       <Modal.Header onClose={handleClose}>
@@ -165,7 +168,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
           )}
           {!csvLoaded && importError === '' && (
             <Text color="text" as="p" size="xl">
-              Only CSV files exported from the Safe are allowed. <br />
+              Only CSV files exported from {chainId == '686' ? 'Karura Safe' : 'Acala Safe'} are allowed. <br />
               <HelpInfo />
             </Text>
           )}

@@ -11,6 +11,7 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TransactionGuard } from './TransactionGuard'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -41,6 +42,7 @@ const Advanced = (): ReactElement => {
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
 
+  const chainId = useSelector(currentChainId)
   return (
     <>
       {/* Nonce */}
@@ -49,8 +51,9 @@ const Advanced = (): ReactElement => {
           Safe Nonce
         </Title>
         <InfoText size="lg">
-          For security reasons, transactions made with Safe need to be executed in order. The nonce shows you which
-          transaction will be executed next. You can find the nonce for a transaction in the transaction details.
+          For security reasons, transactions made with {chainId == '686' ? 'Karura Safe' : 'Acala Safe'} need to be
+          executed in order. The nonce shows you which transaction will be executed next. You can find the nonce for a
+          transaction in the transaction details.
         </InfoText>
         <InfoText color="secondaryLight" size="xl">
           Current Nonce: <Bold data-testid={'current-nonce'}>{nonce}</Bold>

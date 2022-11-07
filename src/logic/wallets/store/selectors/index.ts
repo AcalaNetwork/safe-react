@@ -38,3 +38,6 @@ export const loadedSelector = createSelector(providerSelector, ({ loaded }: Prov
 export const availableSelector = createSelector(providerSelector, ({ available }: ProvidersState): boolean => {
   return available
 })
+export const gasLimitSelector = createSelector(providerSelector, ({ new_safe_gas_limit }: ProvidersState): number => {
+  return new_safe_gas_limit
+})

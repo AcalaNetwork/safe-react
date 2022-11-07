@@ -21,6 +21,8 @@ import {
   FIELD_SAFE_OWNERS_LIST,
   FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE,
 } from '../fields/createSafeFields'
+import { store } from 'src/store'
+import updateSafeGasLimit from 'src/logic/wallets/store/actions/updateSafeGasLimit'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
@@ -53,7 +55,7 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
+  const { gasCostFormatted, gasPrice, gasLimit, gasMaxPrioFee } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,
     numOwners: numberOfOwners,
     safeCreationSalt,
@@ -65,6 +67,15 @@ function ReviewNewSafeStep(): ReactElement | null {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
   }, [gasLimit, gasPrice, createSafeForm, gasMaxPrioFee])
+
+  useEffect(() => {
+    // debugger
+    if (gasLimit) {
+      setTimeout(() => {
+        store.dispatch(updateSafeGasLimit(gasLimit))
+      }, 300)
+    }
+  }, [gasLimit])
 
   return (
     <Row data-testid={'create-safe-review-step'}>

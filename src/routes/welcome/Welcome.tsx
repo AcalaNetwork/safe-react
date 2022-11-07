@@ -9,16 +9,20 @@ import Link from 'src/components/layout/Link'
 import { LOAD_SAFE_ROUTE, OPEN_SAFE_ROUTE } from 'src/routes/routes'
 import Track from 'src/components/Track'
 import { CREATE_SAFE_EVENTS, LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 function Welcome(): ReactElement {
+  const chainId = useSelector(currentChainId)
   return (
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to the Safe.
+          Welcome to {chainId == '686' ? 'Karura Safe' : 'Acala Safe'}.
         </Title>
         <Title size="xs">
-          Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          {chainId == '686' ? 'Karura Safe' : 'Acala Safe'} is the most trusted platform to manage digital assets.{' '}
+          <br /> Here is how to get started:
         </Title>
         <CardsContainer>
           <StyledCard>
