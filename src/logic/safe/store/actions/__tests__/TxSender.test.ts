@@ -125,7 +125,7 @@ describe('TxSender', () => {
       available: true,
       loaded: true,
       ensDomain: '',
-      new_safe_gas_limit: 0
+      new_safe_gas_limit: 0,
     }))
     jest.spyOn(safeContracts, 'getGnosisSafeInstanceAt')
     jest.spyOn(notificationBuilder, 'createTxNotifications')
